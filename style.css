@@ -97,6 +97,7 @@ button {
   padding: 0.35rem 1rem;
   border: 0;
   border-radius: 3px;
+  cursor: pointer;
 }
 
 .add {

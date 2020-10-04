@@ -1,4 +1,4 @@
-let myLibrary = [{ id: 1, title: "Klops", author: "mops", pages: 240, read: false }];
+let myLibrary = [];
 const container = document.querySelector(".books-container");
 const showButton = document.querySelector("#showPopup");
 const cancelButton = document.querySelector("#cancel");
@@ -18,8 +18,13 @@ function addBookToLibrary() {
   let author = document.querySelector("#new-author").value;
   let pages = document.querySelector("#new-pages").value;
   let read = document.querySelector("#new-read").checked;
-  let newBook = new Book(id, title, author, pages, read);
-  myLibrary.push(newBook);
+  if (title && author && pages) {
+    let newBook = new Book(id, title, author, pages, read);
+    myLibrary.push(newBook);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function createId() {
@@ -28,8 +33,8 @@ function createId() {
   } else {
     let highestId = myLibrary.reduce((highest, book) => {
       if (book.id > highest) return book.id;
-      else return highest;
-    });
+      else return highest + 1;
+    }, 0);
     return highestId;
   }
 }
@@ -44,11 +49,12 @@ function updateReadInLibrary(id, read) {
 
 function displayBooks() {
   clearBooks();
-  myLibrary.forEach(book => {
-    let card = document.createElement("div");
-    card.classList.add("card");
-    card.dataset.id = book.id;
-    let bookInfo = `
+  if (myLibrary.length > 0) {
+    myLibrary.forEach(book => {
+      let card = document.createElement("div");
+      card.classList.add("card");
+      card.dataset.id = book.id;
+      let bookInfo = `
       <div class="icon-box"><i class="fas fa-book fa-3x"></i></div>
       <p class="title">Title: <span id="title">${book.title}</span></p>
       <p class="author">Author: <span id="author">${book.author}</span></p>
@@ -61,13 +67,27 @@ function displayBooks() {
           <a href="#"><i class="far fa-trash-alt"></i></a>
         </div>
     `;
-    card.innerHTML = bookInfo;
-    container.appendChild(card);
-  });
+      card.innerHTML = bookInfo;
+      container.appendChild(card);
+    });
+  }
 }
 
 function clearBooks() {
   container.innerHTML = "";
+}
+
+function saveToLocal() {
+  localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
+}
+
+function loadFromLocal() {
+  let local = localStorage.getItem("myLibrary");
+  if (local) {
+    myLibrary = JSON.parse(local);
+  } else {
+    myLibrary = [];
+  }
 }
 
 showButton.addEventListener("click", showForm);
@@ -78,9 +98,14 @@ container.addEventListener("click", updateRead);
 
 function addBook(e) {
   e.preventDefault();
-  addBookToLibrary();
-  hideForm();
-  displayBooks();
+  if (addBookToLibrary()) {
+    hideForm();
+    clearForm();
+    displayBooks();
+    saveToLocal();
+  } else {
+    alert("Incorrect Input!");
+  }
 }
 
 function deleteBook(e) {
@@ -92,6 +117,7 @@ function deleteBook(e) {
       deleteBookFromLibrary(id);
     }
     displayBooks();
+    saveToLocal();
   }
 }
 
@@ -103,11 +129,22 @@ function hideForm() {
   document.querySelector(".form-wrapper").classList.add("hidden");
 }
 
+function clearForm() {
+  document.querySelector("#new-title").value = "";
+  document.querySelector("#new-author").value = "";
+  document.querySelector("#new-pages").value = "";
+  document.querySelector("#new-read").checked = false;
+}
+
 function updateRead(e) {
   if (e.target.type === "checkbox") {
     let id = e.target.parentElement.parentElement.dataset.id;
     updateReadInLibrary(id, e.target.checked);
   }
+  saveToLocal();
 }
 
-window.onload = displayBooks();
+window.onload = function () {
+  loadFromLocal();
+  displayBooks();
+};
