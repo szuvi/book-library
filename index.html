@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://kit.fontawesome.com/7f40b2a12d.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <h1>Your Library</h1>
+    <div class="container">
+      <button class="add" id="showPopup">Add new book</button>
+    </div>
+    <div class="container books-container">
+      <div class="card">
+        <div class="icon-box"><i class="fas fa-book fa-3x"></i></div>
+        <p class="title">Title: <span id="title">Mops</span></p>
+        <p class="author">Author: <span id="author">Klops klops</span></p>
+        <p class="pages">Pages: <span id="pages">420</span></p>
+        <label for="read">
+          Read
+          <input type="checkbox" name="read" id="read" />
+        </label>
+        <div class="delete-icon">
+          <a href="#"><i class="far fa-trash-alt"></i></a>
+        </div>
+      </div>
+    </div>
+    <!-- Popup form -->
+    <div class="form-wrapper hidden">
+      <form class="container">
+        <h2>Input new book:</h2>
+        <label for="new-title"> Title </label> <input type="text" name="new-title" id="new-title" />
+
+        <label for="new-author"> Author</label>
+        <input type="text" name="new-author" id="new-author" />
+
+        <label for="new-pages"> Pages </label> <input type="text" name="new-pages" id="new-pages" />
+
+        <label for="new-read"> Read? </label>
+        <input type="checkbox" name="new-read" id="new-read" />
+
+        <div class="buttons-wraper">
+          <button class="add" id="add">Add</button>
+          <button class="cancel" id="cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </body>
+
+  <script src="app.js"></script>
+</html>
